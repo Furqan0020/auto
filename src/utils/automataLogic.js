@@ -473,6 +473,46 @@ function getNextState(stateId, symbol, transitions) {
   return transition ? transition.to : null;
 }
 
+/**
+ * Computes epsilon closure of a state in NFA
+ */
+function getEpsilonClosure(stateId, transitions) {
+  const closure = new Set([stateId]);
+  const stack = [stateId];
+  
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const epsilonTransitions = transitions.filter(
+      t => t.from === current && t.symbol === 'ε'
+    );
+    
+    for (const trans of epsilonTransitions) {
+      if (!closure.has(trans.to)) {
+        closure.add(trans.to);
+        stack.push(trans.to);
+      }
+    }
+  }
+  
+  return closure;
+}
+
+/**
+ * Get all reachable states from a set of states with a given symbol (for NFA)
+ */
+function getNextStatesNFA(stateIds, symbol, transitions) {
+  const nextStates = new Set();
+  
+  for (const stateId of stateIds) {
+    const nextState = getNextState(stateId, symbol, transitions);
+    if (nextState !== null) {
+      nextStates.add(nextState);
+    }
+  }
+  
+  return nextStates;
+}
+
 // ==================== STRING SIMULATION ====================
 
 /**
@@ -499,8 +539,25 @@ function simulateString(dfa, inputString) {
 
 /**
  * Step-by-step simulation for real-time visualization
+ * Handles both NFA (with epsilon transitions) and DFA
  */
-function* stepByStepSimulation(dfa, inputString) {
+function* stepByStepSimulation(automaton, inputString) {
+  // Check if this is an NFA (has epsilon transitions)
+  const hasEpsilonTransitions = automaton.transitions.some(t => t.symbol === 'ε');
+  
+  if (hasEpsilonTransitions) {
+    // NFA simulation
+    yield* stepByStepSimulationNFA(automaton, inputString);
+  } else {
+    // DFA simulation
+    yield* stepByStepSimulationDFA(automaton, inputString);
+  }
+}
+
+/**
+ * Step-by-step DFA simulation
+ */
+function* stepByStepSimulationDFA(dfa, inputString) {
   let currentState = dfa.startState;
   const isAccepting = dfa.acceptStates.includes(currentState);
   
@@ -535,6 +592,71 @@ function* stepByStepSimulation(dfa, inputString) {
       step: i + 1,
       char,
       state: currentState,
+      accepted: isAccepting,
+      complete: i === inputString.length - 1
+    };
+  }
+}
+
+/**
+ * Step-by-step NFA simulation with epsilon closure
+ */
+function* stepByStepSimulationNFA(nfa, inputString) {
+  // Get initial epsilon closure
+  let currentStates = getEpsilonClosure(nfa.startState, nfa.transitions);
+  
+  // Check if any state in closure is accepting
+  const isAccepting = Array.from(currentStates).some(s => 
+    nfa.acceptStates.includes(s)
+  );
+  
+  yield {
+    step: 0,
+    char: null,
+    state: Array.from(currentStates)[0], // Show first state for visualization
+    states: Array.from(currentStates), // All states in closure
+    accepted: isAccepting,
+    complete: inputString.length === 0
+  };
+  
+  for (let i = 0; i < inputString.length; i++) {
+    const char = inputString[i];
+    
+    // Get next states from all current states
+    const nextStates = getNextStatesNFA(currentStates, char, nfa.transitions);
+    
+    if (nextStates.size === 0) {
+      yield {
+        step: i + 1,
+        char,
+        state: Array.from(currentStates)[0],
+        states: Array.from(currentStates),
+        accepted: false,
+        complete: true,
+        stuck: true
+      };
+      return;
+    }
+    
+    // Compute epsilon closure of all next states
+    const closureStates = new Set();
+    for (const state of nextStates) {
+      const closure = getEpsilonClosure(state, nfa.transitions);
+      closure.forEach(s => closureStates.add(s));
+    }
+    
+    currentStates = closureStates;
+    
+    // Check if any state in closure is accepting
+    const isAccepting = Array.from(currentStates).some(s => 
+      nfa.acceptStates.includes(s)
+    );
+    
+    yield {
+      step: i + 1,
+      char,
+      state: Array.from(currentStates)[0],
+      states: Array.from(currentStates),
       accepted: isAccepting,
       complete: i === inputString.length - 1
     };

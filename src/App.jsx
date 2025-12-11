@@ -4,35 +4,35 @@
  * Assigned Regex: (a+aaa+aa)*cc+ba+aa
  */
 
-import { useState } from 'react';
-import { Play, RotateCcw, Loader } from 'lucide-react';
-import AutomataGraph from './components/AutomataGraph';
-import { generateAutomata, stepByStepSimulation } from './utils/automataLogic';
-import './App.css';
+import { useState } from "react";
+import { Play, RotateCcw, Loader } from "lucide-react";
+import AutomataGraph from "./components/AutomataGraph";
+import { generateAutomata, stepByStepSimulation } from "./utils/automataLogic";
+import "./App.css";
 
-const ASSIGNED_REGEX = '(a+aaa+aa)*cc+ba+aa';
+const ASSIGNED_REGEX = "d(de*d+ef*e+fd*f)df";
 
 function App() {
-  const [regex, setRegex] = useState('');
+  const [regex, setRegex] = useState("");
   const [automata, setAutomata] = useState(null);
-  const [activeTab, setActiveTab] = useState('nfa');
-  const [testString, setTestString] = useState('');
+  const [activeTab, setActiveTab] = useState("nfa");
+  const [testString, setTestString] = useState("");
   const [simulationState, setSimulationState] = useState(null);
   const [isSimulating, setIsSimulating] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleGenerate = () => {
     if (!regex.trim()) {
-      setError('Please enter a regular expression');
+      setError("Please enter a regular expression");
       return;
     }
 
-    setError('');
+    setError("");
     const result = generateAutomata(regex);
 
     if (result.success) {
       setAutomata(result);
-      setActiveTab('nfa');
+      setActiveTab("nfa");
       setSimulationState(null);
     } else {
       setError(result.error);
@@ -41,28 +41,28 @@ function App() {
 
   const handleLoadAssigned = () => {
     setRegex(ASSIGNED_REGEX);
-    setError('');
+    setError("");
   };
 
   const handleSimulate = () => {
     if (!automata) {
-      setError('Please generate an automaton first');
+      setError("Please generate an automaton first");
       return;
     }
 
     if (!testString) {
-      setError('Please enter a test string');
+      setError("Please enter a test string");
       return;
     }
 
-    setError('');
+    setError("");
     setIsSimulating(true);
 
     // Get the current automaton based on active tab
     let currentAutomaton;
-    if (activeTab === 'nfa') {
+    if (activeTab === "nfa") {
       currentAutomaton = automata.nfa;
-    } else if (activeTab === 'dfa') {
+    } else if (activeTab === "dfa") {
       currentAutomaton = automata.dfa;
     } else {
       currentAutomaton = automata.minimizedDfa;
@@ -100,8 +100,8 @@ function App() {
 
   const getCurrentAutomaton = () => {
     if (!automata) return null;
-    if (activeTab === 'nfa') return automata.nfa;
-    if (activeTab === 'dfa') return automata.dfa;
+    if (activeTab === "nfa") return automata.nfa;
+    if (activeTab === "dfa") return automata.dfa;
     return automata.minimizedDfa;
   };
 
@@ -139,7 +139,7 @@ function App() {
     <div className="app">
       <header className="header">
         <h1>Automata Visualizer</h1>
-        <p className="subtitle">Group 4 - Furqan Azeem</p>
+        <p className="subtitle">Group 5 </p>
       </header>
 
       <div className="container">
@@ -156,7 +156,10 @@ function App() {
                 placeholder="Enter regex (e.g., a*b+c)"
                 className="text-input"
               />
-              <button onClick={handleLoadAssigned} className="btn btn-secondary">
+              <button
+                onClick={handleLoadAssigned}
+                className="btn btn-secondary"
+              >
                 Load Assigned Task
               </button>
             </div>
@@ -166,16 +169,16 @@ function App() {
             Generate Automata
           </button>
 
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
+          {error && <div className="error-message">{error}</div>}
 
           {automata && (
             <div className="info-box">
-              <p><strong>Postfix:</strong> {automata.postfix}</p>
-              <p><strong>Alphabet:</strong> {automata.nfa.alphabet.join(', ')}</p>
+              <p>
+                <strong>Postfix:</strong> {automata.postfix}
+              </p>
+              <p>
+                <strong>Alphabet:</strong> {automata.nfa.alphabet.join(", ")}
+              </p>
             </div>
           )}
         </div>
@@ -185,20 +188,29 @@ function App() {
           <div className="visualization-section">
             <div className="tabs">
               <button
-                className={`tab ${activeTab === 'nfa' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('nfa'); handleReset(); }}
+                className={`tab ${activeTab === "nfa" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("nfa");
+                  handleReset();
+                }}
               >
                 NFA
               </button>
               <button
-                className={`tab ${activeTab === 'dfa' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('dfa'); handleReset(); }}
+                className={`tab ${activeTab === "dfa" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("dfa");
+                  handleReset();
+                }}
               >
                 DFA
               </button>
               <button
-                className={`tab ${activeTab === 'minimized' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('minimized'); handleReset(); }}
+                className={`tab ${activeTab === "minimized" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("minimized");
+                  handleReset();
+                }}
               >
                 Minimized DFA
               </button>
@@ -215,15 +227,21 @@ function App() {
             <div className="stats">
               <div className="stat-item">
                 <span className="stat-label">States:</span>
-                <span className="stat-value">{getCurrentAutomaton().states.length}</span>
+                <span className="stat-value">
+                  {getCurrentAutomaton().states.length}
+                </span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Transitions:</span>
-                <span className="stat-value">{getCurrentAutomaton().transitions.length}</span>
+                <span className="stat-value">
+                  {getCurrentAutomaton().transitions.length}
+                </span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Accept States:</span>
-                <span className="stat-value">{getCurrentAutomaton().acceptStates.length}</span>
+                <span className="stat-value">
+                  {getCurrentAutomaton().acceptStates.length}
+                </span>
               </div>
             </div>
           </div>
@@ -233,7 +251,7 @@ function App() {
         {automata && (
           <div className="simulation-panel">
             <h3>String Simulation & Testing</h3>
-            
+
             <div className="input-group">
               <label htmlFor="testString">Test String:</label>
               <input
@@ -278,10 +296,17 @@ function App() {
             {simulationState && (
               <div className="simulation-feedback">
                 <div className="step-info">
-                  <p><strong>Step:</strong> {simulationState.step} / {testString.length}</p>
-                  <p><strong>Current State:</strong> q{simulationState.state}</p>
+                  <p>
+                    <strong>Step:</strong> {simulationState.step} /{" "}
+                    {testString.length}
+                  </p>
+                  <p>
+                    <strong>Current State:</strong> q{simulationState.state}
+                  </p>
                   {simulationState.char && (
-                    <p><strong>Reading:</strong> '{simulationState.char}'</p>
+                    <p>
+                      <strong>Reading:</strong> '{simulationState.char}'
+                    </p>
                   )}
                 </div>
 
@@ -295,7 +320,17 @@ function App() {
               <div className="test-grid">
                 <div className="test-column">
                   <p className="test-header">Valid (Should Accept)</p>
-                  {['cc', 'acc', 'aacc', 'aaacc', 'ba', 'aa'].map(str => (
+                  {[
+                    "ddddf",
+                    "ddeddf",
+                    "ddeeddf",
+                    "deedf",
+                    "defedf",
+                    "deffedf",
+                    "dffdf",
+                    "dfdfdf",
+                    "dfddfdf",
+                  ].map((str) => (
                     <button
                       key={str}
                       className="test-btn valid"
@@ -307,7 +342,15 @@ function App() {
                 </div>
                 <div className="test-column">
                   <p className="test-header">Invalid (Should Reject)</p>
-                  {['c', 'a', 'aaa', 'b', 'bac', 'caa', 'aba'].map(str => (
+                  {[
+                    "dedf",
+                    "dddd",
+                    "dddf",
+                    "defdf",
+                    "dfdf",
+                    "ddedef",
+                    "dfffdf",
+                  ].map((str) => (
                     <button
                       key={str}
                       className="test-btn invalid"

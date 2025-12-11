@@ -33,12 +33,14 @@ Open http://localhost:5173/ in your browser.
 
 ## 🎯 Assigned Regex
 
-**`(a+aaa+aa)*cc+ba+aa`**
+**`d(de*d+ef*e+fd*f)df`**
 
 This regex has three patterns:
-- **A:** `(a+aaa+aa)*cc` - Any number of a's followed by cc
-- **B:** `ba` - Exactly "ba"
-- **C:** `aa` - Exactly "aa"
+- **A:** `de*d` - 'd' followed by zero or more e's, then 'd'
+- **B:** `ef*e` - 'e' followed by zero or more f's, then 'e'
+- **C:** `fd*f` - 'f' followed by zero or more d's, then 'f'
+
+All wrapped with prefix 'd' and suffix 'df'.
 
 ---
 
@@ -56,10 +58,10 @@ This regex has three patterns:
 ## 🧪 Test Cases
 
 ### Valid ✅
-`cc` `acc` `aacc` `aaacc` `ba` `aa`
+`ddddf` `ddeddf` `ddeeddf` `deedf` `defedf` `deffedf` `dffdf` `dfdfdf` `dfddfdf`
 
 ### Invalid ❌
-`c` `a` `aaa` `b` `bac` `caa` `aba`
+`dedf` `dddd` `dddf` `defdf` `dfdf` `ddedef` `dfffdf`
 
 ---
 

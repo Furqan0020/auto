@@ -121,7 +121,7 @@
 
 ## 📊 Performance Metrics
 
-### Assigned Regex: `(a+aaa+aa)*cc+ba+aa`
+### Assigned Regex: `d(de*d+ef*e+fd*f)df`
 
 | Metric | Value |
 |--------|-------|
@@ -131,8 +131,8 @@
 | **DFA Transitions** | ~25 |
 | **Minimized DFA States** | 8 |
 | **Minimized DFA Transitions** | ~20 |
-| **Alphabet Size** | 3 (a, b, c) |
-| **Test Cases Validated** | 15 (7 valid + 8 invalid) |
+| **Alphabet Size** | 3 (d, e, f) |
+| **Test Cases Validated** | 16 (9 valid + 7 invalid) |
 
 ### Build Performance
 

@@ -59,10 +59,33 @@ const AutomataGraph = ({ automaton, highlightedState = null }) => {
       }
     });
 
+    // Build links array and detect bidirectional pairs and self-loops
     const links = Array.from(linkMap.values()).map(link => ({
       ...link,
-      label: link.symbols.join(', ')
+      label: link.symbols.join(', '),
+      isSelf: link.source === link.target,
+      // placeholder for curve offset, will be set below when reverse exists
+      curve: 0
     }));
+
+    // Detect bidirectional links and assign curve offsets (+/-)
+    const indexMap = new Map(); // key -> index
+    links.forEach((l, i) => {
+      indexMap.set(`${l.source}-${l.target}`, i);
+    });
+
+    links.forEach((l, i) => {
+      if (l.isSelf) return;
+      const reverseKey = `${l.target}-${l.source}`;
+      if (indexMap.has(reverseKey)) {
+        const j = indexMap.get(reverseKey);
+        // assign opposite curve offsets if not already assigned
+        if (links[i].curve === 0 && links[j].curve === 0) {
+          links[i].curve = 40; // px offset for control point
+          links[j].curve = -40;
+        }
+      }
+    });
 
     // Create force simulation
     const simulation = d3.forceSimulation(nodes)
@@ -72,7 +95,7 @@ const AutomataGraph = ({ automaton, highlightedState = null }) => {
         .strength(0.5))
       .force('charge', d3.forceManyBody().strength(-800))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(nodeRadius + 20))
+      .force('collision', d3.forceCollide().radius(30))
       .force('x', d3.forceX(width / 2).strength(0.05))
       .force('y', d3.forceY(height / 2).strength(0.05));
 
@@ -207,22 +230,25 @@ const AutomataGraph = ({ automaton, highlightedState = null }) => {
         const ty = targetNode.y;
 
         // Self-loop detection
-        if (d.source.id === d.target.id) {
-          // Draw curved self-loop
-          const loopRadius = 35;
-          const angle = -Math.PI / 2;
-          const cx = sx + loopRadius * Math.cos(angle);
-          const cy = sy + loopRadius * Math.sin(angle);
+        if (d.isSelf || (d.source.id === d.target.id)) {
+          // Draw cubic Bezier self-loop that goes out and comes back
+          const loopRadius = 40;
+          const cp1x = sx + loopRadius;
+          const cp1y = sy - loopRadius * 1.2;
+          const cp2x = sx + loopRadius;
+          const cp2y = sy + loopRadius * 1.2;
+          const ex = sx;
+          const ey = sy - nodeRadius - 6;
 
-          path.attr('d', `
-            M ${sx},${sy - nodeRadius}
-            A ${loopRadius},${loopRadius} 0 1,1 ${sx + nodeRadius * 0.7},${sy - nodeRadius * 0.7}
-          `);
+          path.attr('d', `M ${sx},${sy - nodeRadius} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${ex},${ey}`)
+            .attr('marker-end', ''); // remove arrowhead for self-loop to avoid overlap
 
-          // Position label above
-          label.attr('x', cx).attr('y', cy - 15);
-          
-          // Position background
+          // Label position: evaluate cubic Bezier at t=0.5
+          const t = 0.5;
+          const x = Math.pow(1 - t, 3) * sx + 3 * Math.pow(1 - t, 2) * t * cp1x + 3 * (1 - t) * Math.pow(t, 2) * cp2x + Math.pow(t, 3) * ex;
+          const y = Math.pow(1 - t, 3) * (sy - nodeRadius) + 3 * Math.pow(1 - t, 2) * t * cp1y + 3 * (1 - t) * Math.pow(t, 2) * cp2y + Math.pow(t, 3) * ey;
+
+          label.attr('x', x).attr('y', y - 8);
           const bbox = label.node().getBBox();
           labelBg
             .attr('x', bbox.x - 3)
@@ -231,35 +257,36 @@ const AutomataGraph = ({ automaton, highlightedState = null }) => {
             .attr('height', bbox.height + 4);
 
         } else {
-          // Check for bidirectional links
-          const reverseLink = links.find(l => l.source.id === d.target.id && l.target.id === d.source.id);
-          
-          if (reverseLink && d.source.id < d.target.id) {
-            // Curve the path
+          // Non-self links: check if we assigned a curve offset earlier
+          const curve = d.curve || 0;
+
+          if (curve !== 0) {
+            // Quadratic Bezier with control point offset perpendicular to the line
+            const mx = (sx + tx) / 2;
+            const my = (sy + ty) / 2;
             const dx = tx - sx;
             const dy = ty - sy;
-            const dr = Math.sqrt(dx * dx + dy * dy) * 1.5;
-            
-            path.attr('d', `M ${sx},${sy} A ${dr},${dr} 0 0,1 ${tx},${ty}`);
-          } else if (reverseLink) {
-            // Other direction of bidirectional
-            const dx = tx - sx;
-            const dy = ty - sy;
-            const dr = Math.sqrt(dx * dx + dy * dy) * 1.5;
-            
-            path.attr('d', `M ${sx},${sy} A ${dr},${dr} 0 0,0 ${tx},${ty}`);
+            const len = Math.sqrt(dx * dx + dy * dy) || 1;
+            const nx = -dy / len; // normal vector
+            const ny = dx / len;
+            const cx = mx + nx * curve;
+            const cy = my + ny * curve;
+
+            path.attr('d', `M ${sx},${sy} Q ${cx},${cy} ${tx},${ty}`);
+
+            // Label at quadratic Bezier midpoint (t=0.5): P = 0.25 P0 + 0.5 C + 0.25 P1
+            const lx = 0.25 * sx + 0.5 * cx + 0.25 * tx;
+            const ly = 0.25 * sy + 0.5 * cy + 0.25 * ty;
+            label.attr('x', lx).attr('y', ly - 8);
           } else {
             // Straight line
             path.attr('d', `M ${sx},${sy} L ${tx},${ty}`);
+            const midX = (sx + tx) / 2;
+            const midY = (sy + ty) / 2;
+            label.attr('x', midX).attr('y', midY - 8);
           }
 
-          // Position label at midpoint
-          const midX = (sx + tx) / 2;
-          const midY = (sy + ty) / 2;
-          
-          label.attr('x', midX).attr('y', midY - 8);
-          
-          // Position background
+          // Position background for non-self links
           const bbox = label.node().getBBox();
           labelBg
             .attr('x', bbox.x - 3)

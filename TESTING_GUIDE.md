@@ -5,7 +5,7 @@
 
 ## 🎯 Testing Objective
 
-Verify that the automaton correctly implements the assigned regex `(a+aaa+aa)*cc+ba+aa` by testing all three patterns and edge cases.
+Verify that the automaton correctly implements the assigned regex `d(de*d+ef*e+fd*f)df` by testing all three patterns and edge cases.
 
 ---
 
@@ -13,104 +13,105 @@ Verify that the automaton correctly implements the assigned regex `(a+aaa+aa)*cc
 
 ### Test Suite 1: Valid Strings (Should Accept ✅)
 
-#### Test Case 1.1: Pattern A - Zero Loop
-**Input:** `cc`  
+#### Test Case 1.1: Pattern A - Zero Middle
+**Input:** `ddddf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `(a+aaa+aa)*cc` with loop executing 0 times  
-**Explanation:** The star allows zero repetitions, so "cc" alone is valid.
+**Pattern:** `d(de*d)df` with zero e's in middle  
+**Explanation:** Start with 'd', middle is 'dd' (zero e's), end with 'df'.
 
-#### Test Case 1.2: Pattern A - Single 'a'
-**Input:** `acc`  
+#### Test Case 1.2: Pattern A - One Middle
+**Input:** `ddeddf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `(a+aaa+aa)*cc` with one 'a'  
-**Explanation:** Loop executes once with 'a', followed by "cc".
+**Pattern:** `d(de*d)df` with one 'e'  
+**Explanation:** Start 'd', middle 'ded' (one e), end 'df'.
 
-#### Test Case 1.3: Pattern A - Two 'a's
-**Input:** `aacc`  
+#### Test Case 1.3: Pattern A - Two Middle
+**Input:** `ddeeddf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `(a+aaa+aa)*cc` OR matches Pattern C first then Pattern A  
-**Explanation:** Can be: (1) Loop with "aa", then "cc", OR (2) First accepts "aa" (Pattern C), then continues to "aacc" (Pattern A).
+**Pattern:** `d(de*d)df` with two e's  
+**Explanation:** Start 'd', middle 'deed' (two e's), end 'df'.
 
-**⚠️ CRITICAL TEST:** This demonstrates the "Accept → Reject → Accept" behavior:
-- After "aa": **ACCEPT** ✅ (Pattern C)
-- After "aac": **REJECT** ❌ (intermediate state)
-- After "aacc": **ACCEPT** ✅ (Pattern A)
-
-#### Test Case 1.4: Pattern A - Three 'a's
-**Input:** `aaacc`  
+#### Test Case 1.4: Pattern B - Zero Middle
+**Input:** `deedf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `(a+aaa+aa)*cc` with "aaa"  
-**Explanation:** Loop selects the "aaa" path, followed by "cc".
+**Pattern:** `d(ef*e)df` with zero f's in middle  
+**Explanation:** Start 'd', middle 'ee' (zero f's), end 'df'.
 
-#### Test Case 1.5: Pattern A - Multiple 'a's
-**Input:** `aaaaacc`  
+#### Test Case 1.5: Pattern B - One Middle
+**Input:** `defedf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `(a+aaa+aa)*cc` with multiple loop iterations  
-**Explanation:** Loop can execute multiple times: "aa" + "aaa" or "a" + "aa" + "aa", etc.
+**Pattern:** `d(ef*e)df` with one 'f'  
+**Explanation:** Start 'd', middle 'efe' (one f), end 'df'.
 
-#### Test Case 1.6: Pattern B - Exact Match
-**Input:** `ba`  
+#### Test Case 1.6: Pattern B - Two Middle
+**Input:** `deffedf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `ba`  
-**Explanation:** Direct match of the second union branch.
+**Pattern:** `d(ef*e)df` with two f's  
+**Explanation:** Start 'd', middle 'effe' (two f's), end 'df'.
 
-#### Test Case 1.7: Pattern C - Exact Match
-**Input:** `aa`  
+#### Test Case 1.7: Pattern C - Zero Middle
+**Input:** `dffdf`  
 **Expected:** ACCEPT (Green)  
-**Pattern:** `aa`  
-**Explanation:** Direct match of the third union branch.
+**Pattern:** `d(fd*f)df` with zero d's in middle  
+**Explanation:** Start 'd', middle 'ff' (zero d's), end 'df'.
+
+#### Test Case 1.8: Pattern C - One Middle
+**Input:** `dfdfdf`  
+**Expected:** ACCEPT (Green)  
+**Pattern:** `d(fd*f)df` with one 'd'  
+**Explanation:** Start 'd', middle 'fdf' (one d), end 'df'.
+
+#### Test Case 1.9: Pattern C - Two Middle
+**Input:** `dfddfdf`  
+**Expected:** ACCEPT (Green)  
+**Pattern:** `d(fd*f)df` with two d's  
+**Explanation:** Start 'd', middle 'fddf' (two d's), end 'df'.
 
 ---
 
 ### Test Suite 2: Invalid Strings (Should Reject ❌)
 
-#### Test Case 2.1: Incomplete "cc"
-**Input:** `c`  
+#### Test Case 2.1: Missing Prefix
+**Input:** `dedf`  
 **Expected:** REJECT (Red)  
-**Reason:** Pattern A requires "cc" (two c's), not just one.  
-**DFA Behavior:** After 'c', no valid transition exists or machine is not in final state.
+**Reason:** Missing the starting 'd'. Matches Option 1 + suffix, but forgot prefix.  
+**DFA Behavior:** Machine starts at 'd', but input starts with 'd' and expects pattern inside. This missing the required prefix structure.
 
-#### Test Case 2.2: Single 'a'
-**Input:** `a`  
+#### Test Case 2.2: Missing Suffix 'f'
+**Input:** `dddd`  
 **Expected:** REJECT (Red)  
-**Reason:** Not "aa" (Pattern C), and not followed by "cc" (Pattern A).  
-**DFA Behavior:** Machine stops in non-final state.
+**Reason:** Ends with 'd' instead of 'f'. Pattern A works but suffix should be 'df' not 'd'.  
+**DFA Behavior:** After valid middle section, machine expects 'f' but finds only 'd'.
 
-#### Test Case 2.3: Three 'a's without "cc"
-**Input:** `aaa`  
+#### Test Case 2.3: Incomplete Middle
+**Input:** `dddf`  
 **Expected:** REJECT (Red)  
-**Reason:** Pattern A requires "cc" after the a's. Pattern C only accepts "aa".  
-**DFA Behavior:** Missing "cc" termination.
+**Reason:** Middle is just 'd', not valid for any pattern. Pattern A needs `de*d` (at least 'dd').  
+**DFA Behavior:** 'd' alone is not a valid middle section for any pattern.
 
-#### Test Case 2.4: Incomplete "ba"
-**Input:** `b`  
+#### Test Case 2.4: Broken Option 2
+**Input:** `defdf`  
 **Expected:** REJECT (Red)  
-**Reason:** Pattern B requires "ba", not just 'b'.  
-**DFA Behavior:** Machine expects 'a' after 'b'.
+**Reason:** Starts Pattern B (`ef`) but missing closing 'e'. Should be 'ef*e'.  
+**DFA Behavior:** After 'f', machine expects another 'e' to close the pattern.
 
-#### Test Case 2.5: Extra Character After "ba"
-**Input:** `bac`  
+#### Test Case 2.5: Broken Option 3
+**Input:** `dfdf`  
 **Expected:** REJECT (Red)  
-**Reason:** Pattern B is exactly "ba". The extra 'c' has no valid transition.  
-**DFA Behavior:** After accepting "ba", there's no path for 'c'.
+**Reason:** Starts Pattern C (`f`) but missing closing 'f'. Should be 'fd*f'.  
+**DFA Behavior:** After 'd', machine expects another 'f' to close the pattern.
 
-#### Test Case 2.6: Wrong Order
-**Input:** `caa`  
+#### Test Case 2.6: Suffix Mismatch
+**Input:** `ddedef`  
 **Expected:** REJECT (Red)  
-**Reason:** Pattern A requires a's before "cc", not "c" before "aa".  
-**DFA Behavior:** Starting with 'c' leads to wrong path.
+**Reason:** Valid middle but ends in 'ef' instead of 'df'.  
+**DFA Behavior:** Pattern expects suffix 'df' but finds 'ef'.
 
-#### Test Case 2.7: Invalid Sequence
-**Input:** `aba`  
+#### Test Case 2.7: Invalid Character in Pattern C
+**Input:** `dfffdf`  
 **Expected:** REJECT (Red)  
-**Reason:** No pattern supports 'a' followed by 'b' followed by 'a'.  
-**DFA Behavior:** After 'a', machine expects more a's or "cc", not 'b'.
-
-#### Test Case 2.8: Partial "aacc"
-**Input:** `aaca`  
-**Expected:** REJECT (Red)  
-**Reason:** "aac" is incomplete (missing second 'c'), then extra 'a'.  
-**DFA Behavior:** Machine leaves the path to Pattern A completion.
+**Reason:** Pattern C only allows 'd' inside (`fd*f`). This has 'f' inside.  
+**DFA Behavior:** 'fff' is not valid. Pattern C: 'f' followed by zero or more 'd's, then 'f'.
 
 ---
 
@@ -180,21 +181,22 @@ Simply click any button to auto-fill the test string and observe behavior.
 
 | Test Case | Input | Expected Result | Pattern Matched |
 |-----------|-------|-----------------|-----------------|
-| 1.1 | cc | ✅ ACCEPT | A |
-| 1.2 | acc | ✅ ACCEPT | A |
-| 1.3 | aacc | ✅ ACCEPT | A |
-| 1.4 | aaacc | ✅ ACCEPT | A |
-| 1.5 | aaaaacc | ✅ ACCEPT | A |
-| 1.6 | ba | ✅ ACCEPT | B |
-| 1.7 | aa | ✅ ACCEPT | C |
-| 2.1 | c | ❌ REJECT | None |
-| 2.2 | a | ❌ REJECT | None |
-| 2.3 | aaa | ❌ REJECT | None |
-| 2.4 | b | ❌ REJECT | None |
-| 2.5 | bac | ❌ REJECT | None |
-| 2.6 | caa | ❌ REJECT | None |
-| 2.7 | aba | ❌ REJECT | None |
-| 2.8 | aaca | ❌ REJECT | None |
+| 1.1 | ddddf | ✅ ACCEPT | A |
+| 1.2 | ddeddf | ✅ ACCEPT | A |
+| 1.3 | ddeeddf | ✅ ACCEPT | A |
+| 1.4 | deedf | ✅ ACCEPT | B |
+| 1.5 | defedf | ✅ ACCEPT | B |
+| 1.6 | deffedf | ✅ ACCEPT | B |
+| 1.7 | dffdf | ✅ ACCEPT | C |
+| 1.8 | dfdfdf | ✅ ACCEPT | C |
+| 1.9 | dfddfdf | ✅ ACCEPT | C |
+| 2.1 | dedf | ❌ REJECT | None |
+| 2.2 | dddd | ❌ REJECT | None |
+| 2.3 | dddf | ❌ REJECT | None |
+| 2.4 | defdf | ❌ REJECT | None |
+| 2.5 | dfdf | ❌ REJECT | None |
+| 2.6 | ddedef | ❌ REJECT | None |
+| 2.7 | dfffdf | ❌ REJECT | None |
 
 ---
 

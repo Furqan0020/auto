@@ -1,7 +1,7 @@
 # Automata Visualizer - Theory of Automata Project
 
 **Group 4 - Furqan Azeem**  
-**Assigned Regular Expression:** `(a+aaa+aa)*cc+ba+aa`
+**Assigned Regular Expression:** `d(de*d+ef*e+fd*f)df`
 
 ---
 

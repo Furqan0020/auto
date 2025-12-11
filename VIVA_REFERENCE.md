@@ -5,10 +5,10 @@
 
 ## 📌 Project Quick Facts
 
-- **Assigned Regex:** `(a+aaa+aa)*cc+ba+aa`
-- **Postfix:** `aa+aaa+aa+*.c.c+b.a+a.a+`
-- **Alphabet:** {a, b, c}
-- **Three Patterns:** A: `(a+aaa+aa)*cc` | B: `ba` | C: `aa`
+- **Assigned Regex:** `d(de*d+ef*e+fd*f)df`
+- **Three Patterns:** A: `de*d` | B: `ef*e` | C: `fd*f`
+- **Alphabet:** {d, e, f}
+- **Structure:** Prefix 'd', union of three patterns, suffix 'df'
 
 ---
 

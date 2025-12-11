@@ -36,6 +36,7 @@ Open http://localhost:5173/ in your browser.
 **`d(de*d+ef*e+fd*f)df`**
 
 This regex has three patterns:
+
 - **A:** `de*d` - 'd' followed by zero or more e's, then 'd'
 - **B:** `ef*e` - 'e' followed by zero or more f's, then 'e'
 - **C:** `fd*f` - 'f' followed by zero or more d's, then 'f'
@@ -58,9 +59,11 @@ All wrapped with prefix 'd' and suffix 'df'.
 ## 🧪 Test Cases
 
 ### Valid ✅
+
 `ddddf` `ddeddf` `ddeeddf` `deedf` `defedf` `deffedf` `dffdf` `dfdfdf` `dfddfdf`
 
 ### Invalid ❌
+
 `dedf` `dddd` `dddf` `defdf` `dfdf` `ddedef` `dfffdf`
 
 ---
@@ -91,12 +94,14 @@ src/
 ## 🎓 Academic Features
 
 ### Algorithms (Manual Implementation)
+
 - ✅ **Shunting-Yard Parser** - Operator precedence handling
 - ✅ **Thompson's NFA Construction** - Builds NFA from postfix regex
 - ✅ **Subset Construction** - Converts NFA to DFA using ε-closure
 - ✅ **Table-Filling Minimization** - Produces minimal DFA
 
 ### Visualization Features
+
 - ✅ **Color-coded states** (Start: green, Final: blue double-circle)
 - ✅ **Edge merging** (Multiple transitions → single label)
 - ✅ **Self-loops** as curved arcs

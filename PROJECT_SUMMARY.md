@@ -1,4 +1,5 @@
 # 📦 Project Summary - Automata Visualizer
+
 ## Group 4 - Furqan Azeem
 
 ---
@@ -12,6 +13,7 @@
 ### Core Application Files
 
 1. **`src/utils/automataLogic.js`** (480 lines)
+
    - Shunting-Yard regex parser with operator precedence
    - Thompson's NFA Construction (manual implementation)
    - Subset Construction for NFA→DFA conversion
@@ -19,6 +21,7 @@
    - String simulation engine with step-by-step generator
 
 2. **`src/components/AutomataGraph.jsx`** (330 lines)
+
    - D3.js force-directed graph visualization
    - Custom rendering for start states (green + arrow)
    - Double-circle rendering for final states
@@ -27,6 +30,7 @@
    - Interactive: drag, zoom, pan
 
 3. **`src/App.jsx`** (310 lines)
+
    - Clean UI with header, control panel, and visualization
    - Three tabs: NFA | DFA | Minimized DFA
    - Regex input with "Load Assigned Task" button
@@ -35,6 +39,7 @@
    - Quick test case buttons for assigned regex
 
 4. **`src/App.css`** (420 lines)
+
    - Professional gradient background
    - Modular component styling
    - Responsive design (mobile-friendly)
@@ -47,6 +52,7 @@
 ### Documentation Files
 
 6. **`DOCUMENTATION.md`** (280 lines)
+
    - Complete project overview
    - Algorithm explanations
    - Regex breakdown with test cases
@@ -55,6 +61,7 @@
    - Technology stack details
 
 7. **`TESTING_GUIDE.md`** (380 lines)
+
    - Comprehensive test plan (15 test cases)
    - Step-by-step testing instructions
    - Viva demonstration script
@@ -76,46 +83,46 @@
 
 ### Algorithms Implemented
 
-| Algorithm | Implementation | Lines of Code | Complexity |
-|-----------|----------------|---------------|------------|
-| Shunting-Yard Parser | ✅ Manual | 85 | O(n) |
-| Thompson's NFA | ✅ Manual | 140 | O(n) |
-| Subset Construction | ✅ Manual | 110 | O(2^n) |
-| Table-Filling Minimization | ✅ Manual | 95 | O(n²·\|Σ\|) |
-| String Simulation | ✅ Manual | 50 | O(m·n) |
+| Algorithm                  | Implementation | Lines of Code | Complexity  |
+| -------------------------- | -------------- | ------------- | ----------- |
+| Shunting-Yard Parser       | ✅ Manual      | 85            | O(n)        |
+| Thompson's NFA             | ✅ Manual      | 140           | O(n)        |
+| Subset Construction        | ✅ Manual      | 110           | O(2^n)      |
+| Table-Filling Minimization | ✅ Manual      | 95            | O(n²·\|Σ\|) |
+| String Simulation          | ✅ Manual      | 50            | O(m·n)      |
 
 **Total Algorithm Code:** ~480 lines of pure JavaScript
 
 ### Visualization Features
 
-| Feature | Status | Technology |
-|---------|--------|------------|
-| Force-Directed Layout | ✅ | D3.js d3-force |
-| Start State Indicator | ✅ | SVG arrow + green fill |
-| Double Circle Final States | ✅ | Nested SVG circles |
-| Edge Merging | ✅ | Map-based grouping |
-| Self-Loop Rendering | ✅ | Curved SVG arcs |
-| Bidirectional Edges | ✅ | Offset curves |
-| Label Backgrounds | ✅ | SVG rect behind text |
-| Collision Detection | ✅ | d3.forceCollide |
-| Real-time Highlighting | ✅ | Dynamic fill updates |
-| Drag & Zoom | ✅ | D3 drag + zoom behaviors |
+| Feature                    | Status | Technology               |
+| -------------------------- | ------ | ------------------------ |
+| Force-Directed Layout      | ✅     | D3.js d3-force           |
+| Start State Indicator      | ✅     | SVG arrow + green fill   |
+| Double Circle Final States | ✅     | Nested SVG circles       |
+| Edge Merging               | ✅     | Map-based grouping       |
+| Self-Loop Rendering        | ✅     | Curved SVG arcs          |
+| Bidirectional Edges        | ✅     | Offset curves            |
+| Label Backgrounds          | ✅     | SVG rect behind text     |
+| Collision Detection        | ✅     | d3.forceCollide          |
+| Real-time Highlighting     | ✅     | Dynamic fill updates     |
+| Drag & Zoom                | ✅     | D3 drag + zoom behaviors |
 
 ### UI Components
 
-| Component | Description | Status |
-|-----------|-------------|--------|
-| Header | Title + Group info | ✅ |
-| Regex Input | Text field + Load button | ✅ |
-| Generate Button | Triggers automata generation | ✅ |
-| Info Box | Shows postfix + alphabet | ✅ |
-| Tab System | NFA / DFA / Minimized | ✅ |
-| Graph Container | SVG visualization area | ✅ |
-| Statistics Panel | State/transition counts | ✅ |
-| Test String Input | For simulation | ✅ |
-| Play/Reset Controls | With icons (lucide-react) | ✅ |
-| Simulation Feedback | Step info + result message | ✅ |
-| Quick Test Buttons | 13 predefined test cases | ✅ |
+| Component           | Description                  | Status |
+| ------------------- | ---------------------------- | ------ |
+| Header              | Title + Group info           | ✅     |
+| Regex Input         | Text field + Load button     | ✅     |
+| Generate Button     | Triggers automata generation | ✅     |
+| Info Box            | Shows postfix + alphabet     | ✅     |
+| Tab System          | NFA / DFA / Minimized        | ✅     |
+| Graph Container     | SVG visualization area       | ✅     |
+| Statistics Panel    | State/transition counts      | ✅     |
+| Test String Input   | For simulation               | ✅     |
+| Play/Reset Controls | With icons (lucide-react)    | ✅     |
+| Simulation Feedback | Step info + result message   | ✅     |
+| Quick Test Buttons  | 13 predefined test cases     | ✅     |
 
 ---
 
@@ -123,31 +130,32 @@
 
 ### Assigned Regex: `d(de*d+ef*e+fd*f)df`
 
-| Metric | Value |
-|--------|-------|
-| **NFA States** | 22 |
-| **NFA Transitions** | ~35 (with ε-transitions) |
-| **DFA States** | 10 |
-| **DFA Transitions** | ~25 |
-| **Minimized DFA States** | 8 |
-| **Minimized DFA Transitions** | ~20 |
-| **Alphabet Size** | 3 (d, e, f) |
-| **Test Cases Validated** | 16 (9 valid + 7 invalid) |
+| Metric                        | Value                    |
+| ----------------------------- | ------------------------ |
+| **NFA States**                | 22                       |
+| **NFA Transitions**           | ~35 (with ε-transitions) |
+| **DFA States**                | 10                       |
+| **DFA Transitions**           | ~25                      |
+| **Minimized DFA States**      | 8                        |
+| **Minimized DFA Transitions** | ~20                      |
+| **Alphabet Size**             | 3 (d, e, f)              |
+| **Test Cases Validated**      | 16 (9 valid + 7 invalid) |
 
 ### Build Performance
 
-| Metric | Value |
-|--------|-------|
-| **Vite Build Time** | <5 seconds |
-| **Bundle Size** | ~350 KB (with D3.js) |
-| **Initial Load Time** | ~300ms |
-| **Dev Server Startup** | ~1 second |
+| Metric                 | Value                |
+| ---------------------- | -------------------- |
+| **Vite Build Time**    | <5 seconds           |
+| **Bundle Size**        | ~350 KB (with D3.js) |
+| **Initial Load Time**  | ~300ms               |
+| **Dev Server Startup** | ~1 second            |
 
 ---
 
 ## ✅ Requirements Fulfillment Checklist
 
 ### Technical Architecture ✅
+
 - [x] Framework: React 18+ (Vite)
 - [x] Language: JavaScript ES6+
 - [x] Visualization: D3.js v7 with d3-force
@@ -156,8 +164,9 @@
 - [x] Icons: lucide-react
 
 ### Module A: Core Logic ✅
+
 - [x] Regex Parser with Shunting-Yard Algorithm
-- [x] Operator precedence: * > . > +
+- [x] Operator precedence: \* > . > +
 - [x] Correctly handles `(a+aaa+aa)*cc+ba+aa`
 - [x] Distinguishes `aa` from `+`
 - [x] Thompson's NFA Construction
@@ -166,6 +175,7 @@
 - [x] Final vs Non-Final state separation
 
 ### Module B: Visualization ✅
+
 - [x] D3.js force simulation
 - [x] Collision detection
 - [x] Start state: #dcfce7 fill, #22c55e stroke, incoming arrow
@@ -177,6 +187,7 @@
 - [x] White background rectangles behind labels
 
 ### Module C: User Interface ✅
+
 - [x] Header with group info
 - [x] Regex input field
 - [x] "Load Assigned Task" button
@@ -188,6 +199,7 @@
 - [x] "Accepted" (Green) / "Rejected" (Red) feedback
 
 ### Testing Scenarios ✅
+
 - [x] Valid: cc, ba, aa, aacc ✅
 - [x] Invalid: b, bac, aba ✅
 - [x] All test cases validated in TESTING_GUIDE.md
@@ -244,22 +256,28 @@ Total Project Lines: ~2,500 lines
 ## 🎓 Key Features for Viva
 
 ### 1. **Manual Implementation** ✅
+
 No external automata libraries used. Every algorithm coded from scratch.
 
 ### 2. **Correct Precedence** ✅
+
 Parser correctly handles `(a+aaa+aa)*cc+ba+aa` by distinguishing concatenation from union.
 
 ### 3. **Visual Excellence** ✅
+
 Professional D3.js visualization with:
+
 - Color-coded states
 - Edge optimization
 - Real-time highlighting
 - Interactive controls
 
 ### 4. **Critical Test: "aacc"** ✅
+
 Demonstrates Accept → Reject → Accept behavior, proving correct handling of overlapping patterns.
 
 ### 5. **Complete Documentation** ✅
+
 Three comprehensive guides (1000+ lines total) for understanding, testing, and presenting.
 
 ---
@@ -287,14 +305,14 @@ Three comprehensive guides (1000+ lines total) for understanding, testing, and p
 
 ## 💡 What Makes This Stand Out
 
-| Aspect | Typical Project | This Project |
-|--------|----------------|--------------|
-| Algorithms | Uses library | Manual implementation |
-| Visualization | Static images | Interactive D3.js |
-| Testing | 2-3 cases | 15 comprehensive cases |
-| Documentation | Basic README | 3 detailed guides |
-| UI | Plain HTML | Professional React + CSS |
-| Viva Prep | None | Complete reference card |
+| Aspect        | Typical Project | This Project             |
+| ------------- | --------------- | ------------------------ |
+| Algorithms    | Uses library    | Manual implementation    |
+| Visualization | Static images   | Interactive D3.js        |
+| Testing       | 2-3 cases       | 15 comprehensive cases   |
+| Documentation | Basic README    | 3 detailed guides        |
+| UI            | Plain HTML      | Professional React + CSS |
+| Viva Prep     | None            | Complete reference card  |
 
 ---
 
@@ -305,12 +323,14 @@ Three comprehensive guides (1000+ lines total) for understanding, testing, and p
 You now have a **production-ready, academically rigorous automata visualization suite**. The code is clean, the algorithms are correct, and the documentation is comprehensive.
 
 **Before Viva:**
+
 1. Run `npm run dev` to start server
 2. Review VIVA_REFERENCE.md
 3. Practice the "aacc" demo
 4. Understand all three algorithms deeply
 
 **During Viva:**
+
 - Stay confident
 - Demonstrate "aacc" first
 - Explain the "Accept→Reject→Accept" behavior
@@ -320,6 +340,7 @@ You now have a **production-ready, academically rigorous automata visualization 
 ### For the Professor
 
 This project demonstrates:
+
 - Deep understanding of automata theory
 - Strong software engineering skills
 - Attention to detail (precedence handling)
@@ -343,10 +364,10 @@ This project demonstrates:
 **🎓 Project Status: COMPLETE ✅**
 **📅 Completion Date:** December 10, 2025
 **👨‍💻 Developer:** Furqan Azeem (Group 4)
-**🏆 Grade Expectation:** A+ 
+**🏆 Grade Expectation:** A+
 
 ---
 
-*This project represents the culmination of Theory of Automata concepts applied through modern web development practices. Every line of code serves a purpose, every test case validates correctness, and every documentation page supports understanding.*
+_This project represents the culmination of Theory of Automata concepts applied through modern web development practices. Every line of code serves a purpose, every test case validates correctness, and every documentation page supports understanding._
 
 **Good luck with your Viva! 🚀**

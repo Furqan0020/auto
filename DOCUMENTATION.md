@@ -20,6 +20,7 @@ A production-ready visualization suite for **Theory of Automata** built with Rea
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - npm or yarn
 
@@ -42,16 +43,19 @@ The application will be available at `http://localhost:5173/`
 ### ✅ Core Algorithms (Manual Implementation)
 
 1. **Regex Parser (Shunting-Yard Algorithm)**
+
    - Converts infix regex to postfix notation
    - Handles operator precedence: `*` > `.` (concat) > `+` (union)
    - Correctly parses complex expressions like `(a+aaa+aa)*cc+ba+aa`
 
 2. **Thompson's NFA Construction**
+
    - Builds NFA from postfix regex
    - Supports: Concatenation, Union, Kleene Star
    - Uses ε-transitions
 
 3. **Subset Construction (NFA → DFA)**
+
    - Computes ε-closure
    - Implements move function
    - Generates deterministic automaton
@@ -96,41 +100,43 @@ The application will be available at `http://localhost:5173/`
 
 ### Three Patterns (Union):
 
-| Pattern | Regex | Description |
-|---------|-------|-------------|
-| **A** | `(a+aaa+aa)*cc` | Any number of a's followed by cc |
-| **B** | `ba` | Exactly "ba" |
-| **C** | `aa` | Exactly "aa" |
+| Pattern | Regex           | Description                      |
+| ------- | --------------- | -------------------------------- |
+| **A**   | `(a+aaa+aa)*cc` | Any number of a's followed by cc |
+| **B**   | `ba`            | Exactly "ba"                     |
+| **C**   | `aa`            | Exactly "aa"                     |
 
 ### Valid Test Cases ✅
 
-| String | Pattern | Explanation |
-|--------|---------|-------------|
-| `cc` | A | Loop 0 times, then cc |
-| `acc` | A | One 'a' + cc |
-| `aacc` | A | Two 'a's + cc |
-| `aaacc` | A | Three 'a's + cc |
-| `ba` | B | Exact match |
-| `aa` | C | Exact match |
+| String  | Pattern | Explanation           |
+| ------- | ------- | --------------------- |
+| `cc`    | A       | Loop 0 times, then cc |
+| `acc`   | A       | One 'a' + cc          |
+| `aacc`  | A       | Two 'a's + cc         |
+| `aaacc` | A       | Three 'a's + cc       |
+| `ba`    | B       | Exact match           |
+| `aa`    | C       | Exact match           |
 
 ### Invalid Test Cases ❌
 
-| String | Why Rejected |
-|--------|--------------|
-| `c` | Incomplete, needs cc |
-| `a` | Not aa, missing cc |
-| `aaa` | Too long for aa, missing cc |
-| `b` | Incomplete, needs ba |
-| `bac` | Extra 'c' after ba |
-| `caa` | Wrong order |
-| `aba` | No valid path |
+| String | Why Rejected                |
+| ------ | --------------------------- |
+| `c`    | Incomplete, needs cc        |
+| `a`    | Not aa, missing cc          |
+| `aaa`  | Too long for aa, missing cc |
+| `b`    | Incomplete, needs ba        |
+| `bac`  | Extra 'c' after ba          |
+| `caa`  | Wrong order                 |
+| `aba`  | No valid path               |
 
 ---
 
 ## 🎓 Viva Preparation - Key Explanation Points
 
 ### 1. **Operator Precedence Logic**
+
 "Sir, the parser uses the Shunting-Yard algorithm. In our regex `(a+aaa+aa)*cc+ba+aa`, the precedence is:
+
 - `*` (Kleene Star) = Highest (3)
 - `.` (Concatenation) = Medium (2)
 - `+` (Union) = Lowest (1)
@@ -138,20 +144,26 @@ The application will be available at `http://localhost:5173/`
 This ensures `aaa` is parsed as `a.a.a` (three a's concatenated), not as `a + aa`."
 
 ### 2. **Thompson's Construction**
+
 "Each regex operator creates a specific NFA fragment:
+
 - **Basic:** Single character creates 2 states with one transition
 - **Star:** Adds ε-transitions for zero-or-more repetition with a loop
 - **Concat:** Connects accept state of NFA1 to start state of NFA2 via ε
 - **Union:** New start state with ε-transitions to both NFAs"
 
 ### 3. **Subset Construction**
+
 "We compute the ε-closure (all reachable states via ε-transitions) and group them into DFA states. Each DFA state represents a set of NFA states. We then compute the move function for each symbol."
 
 ### 4. **Minimization**
+
 "Table-Filling algorithm separates final and non-final states first, then iteratively marks pairs as distinguishable if they reach distinguishable states on the same input symbol."
 
 ### 5. **Critical Test: `aacc`**
+
 "This demonstrates non-trivial behavior:
+
 - After 'aa': ACCEPT (Pattern C)
 - After 'aac': REJECT (intermediate)
 - After 'aacc': ACCEPT (Pattern A)
@@ -190,12 +202,12 @@ auto/
 
 ## 📊 Performance Metrics
 
-| Metric | Value |
-|--------|-------|
-| **NFA States** (Group 4 regex) | ~20 states |
-| **DFA States** (after subset construction) | ~10 states |
-| **Minimized DFA States** | ~8 states |
-| **Alphabet Size** | 3 symbols (a, b, c) |
+| Metric                                     | Value               |
+| ------------------------------------------ | ------------------- |
+| **NFA States** (Group 4 regex)             | ~20 states          |
+| **DFA States** (after subset construction) | ~10 states          |
+| **Minimized DFA States**                   | ~8 states           |
+| **Alphabet Size**                          | 3 symbols (a, b, c) |
 
 ---
 
@@ -205,7 +217,7 @@ auto/
 ✅ **Production-Ready UI** - Clean, academic design  
 ✅ **Real-time Visualization** - Step-by-step string processing  
 ✅ **Comprehensive Testing** - Built-in test cases for assigned regex  
-✅ **Educational** - Demonstrates Accept → Reject → Accept behavior  
+✅ **Educational** - Demonstrates Accept → Reject → Accept behavior
 
 ---
 

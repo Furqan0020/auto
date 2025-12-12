@@ -1,5 +1,3 @@
-
-
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +5,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   color: #1e293b;
@@ -83,7 +81,7 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .text-input:focus {
@@ -151,8 +149,12 @@ body {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ==================== MESSAGES ==================== */
@@ -383,7 +385,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .test-btn.valid {
@@ -414,19 +416,19 @@ body {
   .header h1 {
     font-size: 1.8rem;
   }
-  
+
   .input-row {
     flex-direction: column;
   }
-  
+
   .test-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .stats {
     flex-direction: column;
   }
-  
+
   .simulation-controls {
     flex-direction: column;
   }

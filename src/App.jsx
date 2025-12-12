@@ -1,9 +1,3 @@
-/**
- * Automata Visualizer - Main Application
- * Group 4 - Furqan Azeem
- * Assigned Regex: (a+aaa+aa)*cc+ba+aa
- */
-
 import { useState } from "react";
 import { Play, RotateCcw, Loader } from "lucide-react";
 import AutomataGraph from "./components/AutomataGraph";

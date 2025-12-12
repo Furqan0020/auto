@@ -1,9 +1,3 @@
-/**
- * AutomataGraph - D3.js Force-Directed Graph Visualization
- * Features: Double circle for final states, curved self-loops, edge merging, collision detection
- * Group 4 - Furqan Azeem
- */
-
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
